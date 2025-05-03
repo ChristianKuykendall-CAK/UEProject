@@ -12,6 +12,7 @@ class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+class UMyUserWidget;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
@@ -55,8 +56,27 @@ class AUEProjectCharacter : public ACharacter
 public:
 	AUEProjectCharacter();
 	
+	UPROPERTY()
+	UMyUserWidget* HUD;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UMyUserWidget> WidgetClass;
 protected:
+
+	// set height of the player capsule for crouching
+	float StandingHeight = 96.0f;
+	float CrouchingHeight = 48.0f;
+
+	// Allows player to pickup orb
+	UFUNCTION()
+	void OnOverlapBegin(
+		UPrimitiveComponent* OverlappedComp,
+		AActor* OtherActor,
+		UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex,
+		bool bFromSweep,
+		const FHitResult& SweepResult
+	);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float CrouchSpeed;

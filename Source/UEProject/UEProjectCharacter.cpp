@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "MyUserWidget.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -72,6 +74,19 @@ AUEProjectCharacter::AUEProjectCharacter()
 
 void AUEProjectCharacter::BeginPlay() {
 	Super::BeginPlay();
+
+	GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(this, &AUEProjectCharacter::OnOverlapBegin);
+
+	// Make new widget for the user
+	if (WidgetClass)
+	{
+		HUD = CreateWidget<UMyUserWidget>(GetWorld(), WidgetClass);
+		if (HUD)
+		{
+			HUD->AddToViewport();
+		}
+	}
+
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 void AUEProjectCharacter::StartSprint() {
@@ -81,12 +96,32 @@ void AUEProjectCharacter::StopSprint() {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
 }
 
+// Used for crouching
 void AUEProjectCharacter::StartCrouch() {
 	GetCharacterMovement()->MaxWalkSpeed = CrouchSpeed;
+
+	// Get the capsule the player use and set the height. !!! SetCapsuleHalfHeight is a built in component
+	GetCapsuleComponent()->SetCapsuleHalfHeight(CrouchingHeight);
 }
+// Used for crouching
 void AUEProjectCharacter::StopCrouch() {
 	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+
+	GetCapsuleComponent()->SetCapsuleHalfHeight(StandingHeight);
 }
+
+// Update UI when player touches Orb(OtherActor)
+void AUEProjectCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	UE_LOG(LogTemp, Warning, TEXT("COLLISION DETECTED"));
+
+	if (HUD)
+	{
+		HUD->UpdateOrbCount(8);
+	}
+}
+
 
 void AUEProjectCharacter::NotifyControllerChanged()
 {
@@ -120,12 +155,12 @@ void AUEProjectCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		// Sprinting
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StartSprint);
 
-		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StopSprint);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &AUEProjectCharacter::StopSprint);
 
 		// Crouching
 		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StartCrouch);
 
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StopCrouch);
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Completed, this, &AUEProjectCharacter::StopCrouch);
 
 
 	}
