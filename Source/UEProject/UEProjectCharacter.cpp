@@ -18,6 +18,19 @@ DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 AUEProjectCharacter::AUEProjectCharacter()
 {
+
+	CrouchSpeed = 100.0f;
+	WalkSpeed = 200.0f;
+	SprintSpeed = 500.0f;
+
+	static ConstructorHelpers::FObjectFinder<UInputAction>SprintInputActionAsset(TEXT("/Game/ThirdPerson/Input/Actions/IA_Sprint"));
+	if (SprintInputActionAsset.Succeeded())
+		SprintAction = SprintInputActionAsset.Object;
+	
+	static ConstructorHelpers::FObjectFinder<UInputAction>CrouchInputActionAsset(TEXT("/Game/ThirdPerson/Input/Actions/IA_Crouch"));
+	if (CrouchInputActionAsset.Succeeded())
+		CrouchAction = CrouchInputActionAsset.Object;
+
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 		
@@ -57,6 +70,24 @@ AUEProjectCharacter::AUEProjectCharacter()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
+void AUEProjectCharacter::BeginPlay() {
+	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+void AUEProjectCharacter::StartSprint() {
+	GetCharacterMovement()->MaxWalkSpeed = SprintSpeed;
+}
+void AUEProjectCharacter::StopSprint() {
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
+void AUEProjectCharacter::StartCrouch() {
+	GetCharacterMovement()->MaxWalkSpeed = CrouchSpeed;
+}
+void AUEProjectCharacter::StopCrouch() {
+	GetCharacterMovement()->MaxWalkSpeed = WalkSpeed;
+}
+
 void AUEProjectCharacter::NotifyControllerChanged()
 {
 	Super::NotifyControllerChanged();
@@ -86,9 +117,16 @@ void AUEProjectCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::Look);
 
-		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::Run);
+		// Sprinting
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StartSprint);
 
-		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::Crouch);
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StopSprint);
+
+		// Crouching
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StartCrouch);
+
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::StopCrouch);
+
 
 	}
 	else
@@ -133,11 +171,3 @@ void AUEProjectCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void AUEProjectCharacter::Run(const FInputActionValue& Value)
-{
-
-}
-void AUEProjectCharacter::Crouch(const FInputActionValue& Value)
-{
-
-}

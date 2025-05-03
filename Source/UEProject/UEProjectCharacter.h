@@ -46,7 +46,7 @@ class AUEProjectCharacter : public ACharacter
 
 	// Player Sprinting
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* RunAction;
+	UInputAction* SprintAction;
 
 	// Player Crouching
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -58,17 +58,24 @@ public:
 
 protected:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float CrouchSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float WalkSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	float SprintSpeed;
+
+	
+
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-	// Called for sprinting
-	void Run(const FInputActionValue& Value);
-
-	// Called for crouching
-	void Crouch(const FInputActionValue& Value);
+	
 
 			
 
@@ -83,5 +90,12 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+	void BeginPlay();
+	void StartSprint();
+	void StopSprint();
+	void StartCrouch();
+	void StopCrouch();
+
 };
 
