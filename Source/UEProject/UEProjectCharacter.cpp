@@ -85,6 +85,11 @@ void AUEProjectCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::Look);
+
+		EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::Run);
+
+		EnhancedInputComponent->BindAction(CrouchAction, ETriggerEvent::Triggered, this, &AUEProjectCharacter::Crouch);
+
 	}
 	else
 	{
@@ -126,4 +131,13 @@ void AUEProjectCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AUEProjectCharacter::Run(const FInputActionValue& Value)
+{
+
+}
+void AUEProjectCharacter::Crouch(const FInputActionValue& Value)
+{
+
 }

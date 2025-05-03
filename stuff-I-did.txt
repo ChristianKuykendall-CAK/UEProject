@@ -1,0 +1,10 @@
+I added run and crouch to UEProjectCharacter.cpp and header files
+
+I added landscape and buildings and sculpted the mountain
+
+I added a player avatar animation for idle, walking, running, and crouching
+
+
+CREDITS
+
+Foliage - MYTHRA TECH

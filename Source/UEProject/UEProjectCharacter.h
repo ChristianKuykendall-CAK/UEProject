@@ -44,6 +44,14 @@ class AUEProjectCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	// Player Sprinting
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* RunAction;
+
+	// Player Crouching
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* CrouchAction;
+
 public:
 	AUEProjectCharacter();
 	
@@ -55,6 +63,13 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	// Called for sprinting
+	void Run(const FInputActionValue& Value);
+
+	// Called for crouching
+	void Crouch(const FInputActionValue& Value);
+
 			
 
 protected:
