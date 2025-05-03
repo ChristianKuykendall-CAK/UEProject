@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Orb.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class UEPROJECT_API AOrb : public AActor
 {
@@ -23,4 +25,12 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+private:
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* SphereComponent;
+
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+		UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+		bool bFromSweep, const FHitResult& SweepResult);
 };
