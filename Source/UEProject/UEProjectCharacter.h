@@ -16,7 +16,7 @@ class UMyUserWidget;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
-UCLASS(config=Game)
+UCLASS(config = Game)
 class AUEProjectCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -28,7 +28,7 @@ class AUEProjectCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
-	
+
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -55,7 +55,10 @@ class AUEProjectCharacter : public ACharacter
 
 public:
 	AUEProjectCharacter();
-	
+
+	// counts orbs collected
+	int32 CollectedOrbCount = 0;
+
 	UPROPERTY()
 	UMyUserWidget* HUD;
 
@@ -87,7 +90,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
 	float SprintSpeed;
 
-	
+
 
 	/** Called for movement input */
 	void Move(const FInputActionValue& Value);
@@ -95,9 +98,9 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 
-	
 
-			
+
+
 
 protected:
 
@@ -118,4 +121,5 @@ public:
 	void StopCrouch();
 
 };
+
 

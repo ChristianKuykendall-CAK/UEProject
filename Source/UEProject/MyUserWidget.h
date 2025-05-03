@@ -6,14 +6,11 @@
 #include "Blueprint/UserWidget.h"
 #include "MyUserWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class UEPROJECT_API UMyUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateOrbCount(int32 Count);

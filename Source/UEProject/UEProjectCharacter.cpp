@@ -28,14 +28,14 @@ AUEProjectCharacter::AUEProjectCharacter()
 	static ConstructorHelpers::FObjectFinder<UInputAction>SprintInputActionAsset(TEXT("/Game/ThirdPerson/Input/Actions/IA_Sprint"));
 	if (SprintInputActionAsset.Succeeded())
 		SprintAction = SprintInputActionAsset.Object;
-	
+
 	static ConstructorHelpers::FObjectFinder<UInputAction>CrouchInputActionAsset(TEXT("/Game/ThirdPerson/Input/Actions/IA_Crouch"));
 	if (CrouchInputActionAsset.Succeeded())
 		CrouchAction = CrouchInputActionAsset.Object;
 
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -114,13 +114,19 @@ void AUEProjectCharacter::StopCrouch() {
 void AUEProjectCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	UE_LOG(LogTemp, Warning, TEXT("COLLISION DETECTED"));
-
-	if (HUD)
+	if (OtherActor && OtherActor != this)
 	{
-		HUD->UpdateOrbCount(8);
+		CollectedOrbCount++;
+
+		if (HUD)
+		{
+			HUD->UpdateOrbCount(CollectedOrbCount);
+		}
+
+		OtherActor->Destroy();
 	}
 }
+
 
 
 void AUEProjectCharacter::NotifyControllerChanged()
@@ -141,7 +147,7 @@ void AUEProjectCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
+
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -183,7 +189,7 @@ void AUEProjectCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
+
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
@@ -205,4 +211,3 @@ void AUEProjectCharacter::Look(const FInputActionValue& Value)
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
 }
-

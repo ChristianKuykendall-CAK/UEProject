@@ -1,3 +1,4 @@
+
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
@@ -6,6 +7,8 @@
 
 void UMyUserWidget::UpdateOrbCount(int32 Count) {
 	if (OrbCountText) {
-		OrbCountText->SetText(FText::FromString(TEXT("testing")));
+		FString ScoreString = FString::Printf(TEXT("Orbs %d/3"), Count);
+		OrbCountText->SetText(FText::FromString(ScoreString));
 	}
 }
+
