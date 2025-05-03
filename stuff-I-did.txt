@@ -1,8 +1,18 @@
+SCRIPTING
+
 I added run and crouch to UEProjectCharacter.cpp and header files
 
 I added landscape and buildings and sculpted the mountain
 
 I added a player avatar animation for idle, walking, running, and crouching
+
+I added enemies that shoot objects at the player once the player enters the sphere radius
+
+I added orbs that the player can pickup to complete the level
+
+I added foliage from an imported pack
+
+
 
 
 CREDITS
