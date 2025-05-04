@@ -18,4 +18,7 @@ public:
 protected:
 	UPROPERTY(meta = (BindWidget))
 	class UTextBlock* OrbCountText;
+
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* WinText;
 };

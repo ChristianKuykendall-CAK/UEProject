@@ -10,5 +10,10 @@ void UMyUserWidget::UpdateOrbCount(int32 Count) {
 		FString ScoreString = FString::Printf(TEXT("Orbs %d/3"), Count);
 		OrbCountText->SetText(FText::FromString(ScoreString));
 	}
+	if (Count >= 3) {
+		if (WinText) {
+			WinText->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 }
 
