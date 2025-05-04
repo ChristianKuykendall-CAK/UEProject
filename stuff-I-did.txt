@@ -21,4 +21,4 @@ Foliage - MYTHRA TECH
 
 Grass Texture - Quixel
 
-Cobblestone Wall - mebuyukbulut
+Cobblestone Wall Texture - mebuyukbulut
