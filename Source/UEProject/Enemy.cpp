@@ -1,27 +1,47 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-
 #include "Enemy.h"
 
-// Sets default values
 AEnemy::AEnemy()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 }
 
-// Called when the game starts or when spawned
 void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	StartLocation = GetActorLocation();
+
+	// Ensure direction is normalized
+	MoveDirection = MoveDirection.GetSafeNormal();
 }
 
-// Called every frame
 void AEnemy::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-}
+	float DeltaMove = MoveSpeed * DeltaTime;
+	FVector Offset = MoveDirection * DeltaMove;
+	FVector CurrentLocation = GetActorLocation();
 
+	// Move in the chosen direction
+	if (bMovingForward)
+	{
+		CurrentLocation += Offset;
+
+		// Check if we've gone too far
+		if (FVector::Dist(StartLocation, CurrentLocation) >= MoveDistance)
+		{
+			bMovingForward = false;
+		}
+	}
+	else
+	{
+		CurrentLocation -= Offset;
+
+		if (FVector::Dist(StartLocation, CurrentLocation) <= 1.f)
+		{
+			bMovingForward = true;
+		}
+	}
+
+	SetActorLocation(CurrentLocation);
+}
